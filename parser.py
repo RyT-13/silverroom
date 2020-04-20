@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import lxml
+import os
 
 URL_BASE = 'https://www.silverroom.ru'
 URL_SEARCH = 'https://www.silverroom.ru/search'
@@ -26,16 +27,30 @@ def save_data(name, file_data):
         file.write(chunk)
 
 
-def check_lot(lot):
+def check_lot(lot, path):
     url = f'{URL_PHOTOS}/{lot}/1.jpg'
     file = get_file(url)
     print(file.status_code)
     if (file.status_code == 200):
         print(f'{lot} - ok')
-        save_data(f'{lot}', file)
+        save_data(f'{path}/{lot}', file)
     else:
         print(f'{lot}   NOT FOUND   !!!!!')
 
+
+def get_lots(directory):
+    path = f'{directory}/result'
+    os.mkdir(path)
+    for lot in os.listdir(directory):
+        check_lot(lot, path)
+
+def create_result_dir(directory):
+    pass
+
+
+
 # save_data('2', get_file('https://www.silverroom.ru/photos/2/215556/1.jpg'))
-check_lot(209305)
-check_lot(215556)
+# check_lot(209305)
+# check_lot(215556)
+
+get_lots('lots')
